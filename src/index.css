@@ -1,0 +1,312 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@font-face {
+  font-family: 'JameelNooriNastaleeq';
+  src: url('/public/fonts/Jameel\ Noori\ Nastaleeq\ Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+
+/* global.css */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  
+  #batch-print-area,
+  #batch-print-area * {
+    visibility: visible;
+  }
+
+  #batch-print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  .print-page {
+    page-break-after: always;
+  }
+
+  .print-page:last-child {
+    page-break-after: auto;
+  }
+}
+
+
+.invoice-table {
+  border-radius: 5px;
+}
+
+/* Default (light mode) */
+.select-bar {
+  width: 100%;
+}
+
+.select__control {
+  background-color: #D6D3D1;
+  border: 1px solid #ccc;
+  color: #000;
+  border-radius: 6px;
+  min-height: 40px;
+}
+
+.select__control--is-focused {
+  border-color: #666;
+  box-shadow: 0 0 0 1px #888;
+}
+
+.select__placeholder {
+  color: #888;
+}
+
+.select__single-value {
+  color: #111;
+}
+
+.select__menu {
+  background-color: #d6d3d1;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 4px;
+  /* z-index: 10; */
+}
+
+.select__option {
+  background-color: #d6d3d1;
+  color: #000;
+}
+
+.select__option--is-focused {
+  background-color: #e6e6e6;
+}
+
+.select__option--is-selected {
+  background-color: #d6d3d1;
+  color: #000;
+}
+
+.select__input input {
+  color: #000;
+}
+
+.select__indicator {
+  color: #333;
+}
+
+.select__indicator:hover {
+  color: #000;
+}
+
+/* DARK MODE (scoped with Tailwind's `dark` class) */
+.dark .select__control {
+  background-color: transparent;
+  border: 1px solid #555;
+  color: #eee;
+}
+
+.dark .select .dark .select__placeholder {
+  color: #aaa;
+}
+
+.dark .select__single-value {
+  color: #aaa;
+}
+
+.dark .select__menu {
+  background-color: #334155;
+  border: 1px solid #334155;
+}
+
+.dark .select__option {
+  background-color: #0f172a;
+  color: #eee;
+}
+
+/* focused */
+.dark .select__option--is-focused {
+  background-color: #1e293b;
+}
+
+.dark .select__option--is-selected {
+  background-color: #444;
+  color: #fff;
+}
+
+.dark .select__input input {
+  color: #fff;
+}
+
+.dark .select__indicator {
+  color: #ccc;
+}
+
+.dark .select__indicator:hover {
+  color: #fff;
+}
+
+/* Option Selection */
+
+.dark .select_options__control {
+  background-color: transparent;
+  border: 1px solid #555;
+  color: #eee;
+}
+
+.dark .select_options__placeholder {
+  color: #aaa;
+}
+
+.dark .select_options__single-value {
+  color: #aaa;
+}
+
+.dark .select_options__menu {
+  background-color: #334155;
+  border: 1px solid #334155;
+}
+
+.dark .select_options__option {
+  background-color: #0f172a;
+  color: #eee;
+}
+
+.dark .select_options__option--is-focused {
+  background-color: #1e293b;
+}
+
+.dark .select_options__option--is-selected {
+  background-color: #444;
+  color: #fff;
+}
+
+.dark .select_options__input input {
+  color: #fff;
+}
+
+.dark .select_options__indicator {
+  color: #ccc;
+}
+
+.dark .select_options__indicator:hover {
+  color: #fff;
+}
+
+/* ScroolBar */
+/* Dark mode */
+/* WebKit (Chrome, Safari) */
+.dark .select__menu-list::-webkit-scrollbar-thumb {
+  background-color: #334155;
+  /* slate-700 */
+  border-radius: 4px;
+}
+
+.dark .select__menu-list::-webkit-scrollbar-track {
+  background: #0f172a;
+  /* slate-900 */
+}
+
+/* Firefox */
+.dark .select__menu-list {
+  scrollbar-color: #334155 #0f172a;
+}
+
+
+.select__value-container .select__value-container--is-multi .select__value-container--has-value {
+  display: flex;
+  width: 100%;
+}
+
+.select__control {
+  max-height: 38px;
+  overflow-x: auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.dark .select__multi-value {
+  background-color: #334155;
+  color: #aaa;
+  border-radius: 4px;
+}
+
+.dark .select__multi-value__label {
+  color: #fff;
+}
+
+.dark .select__multi-value__remove:hover {
+  background-color: #475569;
+  color: #aaa;
+}
+
+.select__indicators {
+  align-self: self-start;
+}
+
+.dark select__indicators {
+  align-self: self-start;
+  align-self: baseline;
+}
+
+.select__clear-indicator .select__dropdown-indicator .select__dropdown-indicator {
+  align-self: self-start;
+}
+
+.dark .select__multi-value::-webkit-scrollbar-thumb {
+  background-color: #334155;
+
+  border-radius: 4px;
+}
+
+.dark .select__multi-value::-webkit-scrollbar-track {
+  background: #0f172a;
+
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar {
+  height: 8px;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background-color: #0f172a;
+
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #334155;
+
+  border-radius: 4px;
+}
+
+.dark .custom-scrollbar {
+  scrollbar-color: #334155 #0f172a;
+  scrollbar-width: thin;
+}
+
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
