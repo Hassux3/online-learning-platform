@@ -1769,6 +1769,7 @@ function CrudPage({ table, setTable, parentData, refresh }) {
       toast("Load failed", "er");
     }
     setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [table]);
 
   useEffect(() => {
@@ -1787,6 +1788,7 @@ function CrudPage({ table, setTable, parentData, refresh }) {
       });
       setFkData(map);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [table]);
 
   const filtered = records.filter((r) =>
