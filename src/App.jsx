@@ -844,7 +844,7 @@ function Cell({ v, col }) {
 // ══════════════════════════════════════════════════════════════════════════════
 // SIDEBAR
 // ══════════════════════════════════════════════════════════════════════════════
-function Sidebar({ page, setPage, open, setOpen, data, goCrud }) {
+function Sidebar({ page, setPage, open, setOpen, data, goCrud, crudTable }) {
   const navTables = [
     { k: "instructors", dot: "#9333ea" },
     { k: "courses", dot: "#0284c7" },
@@ -922,7 +922,7 @@ function Sidebar({ page, setPage, open, setOpen, data, goCrud }) {
         {navTables.map((t) => (
           <button
             key={t.k}
-            className="sbi"
+            className={`sbi${page === "crud" && crudTable === t.k ? " act" : ""}`}
             onClick={() => goCrud(t.k)}
             title={!open ? TCONF[t.k].label : undefined}
           >
@@ -1747,7 +1747,7 @@ function TablesPage({ data, goCrud }) {
 // ══════════════════════════════════════════════════════════════════════════════
 // CRUD PAGE
 // ══════════════════════════════════════════════════════════════════════════════
-function CrudPage({ table, setTable, parentData, refresh }) {
+function CrudPage({ table, parentData, refresh }) {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(false);
   const [q, setQ] = useState("");
@@ -1876,51 +1876,6 @@ function CrudPage({ table, setTable, parentData, refresh }) {
 
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
-      {/* Left nav */}
-      <div
-        style={{
-          width: 200,
-          flexShrink: 0,
-          padding: "20px 10px",
-          borderRight: "1px solid var(--border)",
-          background: "var(--surface)",
-          position: "sticky",
-          top: 0,
-          height: "100vh",
-          overflowY: "auto",
-        }}
-      >
-        <div
-          style={{
-            fontSize: 10.5,
-            fontWeight: 700,
-            letterSpacing: ".8px",
-            textTransform: "uppercase",
-            color: "var(--muted)",
-            padding: "0 8px",
-            marginBottom: 8,
-          }}
-        >
-          Tables
-        </div>
-        {TKEYS.map((k) => (
-          <button
-            key={k}
-            className="sbi"
-            style={{
-              color: table === k ? "var(--ink)" : "var(--ink2)",
-              background: table === k ? "var(--s2)" : "transparent",
-              fontWeight: table === k ? 700 : 500,
-              width: "100%",
-            }}
-            onClick={() => setTable(k)}
-          >
-            <span className="sb-dot" style={{ background: TCONF[k].dot }} />
-            <span style={{ fontSize: 13 }}>{TCONF[k].label}</span>
-          </button>
-        ))}
-      </div>
-
       <div style={{ flex: 1, padding: "28px 28px", minWidth: 0 }}>
         <div
           style={{
@@ -3799,6 +3754,7 @@ export default function App() {
           setOpen={setSbOpen}
           data={data}
           goCrud={goCrud}
+          crudTable={crudTable}
         />
         <div className={`main${sbOpen ? "" : " coll"}`}>
           {!appReady ? (
@@ -3826,7 +3782,6 @@ export default function App() {
               {page === "crud" && (
                 <CrudPage
                   table={crudTable}
-                  setTable={setCrudTable}
                   parentData={data}
                   refresh={refresh}
                 />
