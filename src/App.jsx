@@ -3031,8 +3031,7 @@ function ErdPage() {
           Entity Relationship Diagram
         </h1>
         <p style={{ fontSize: 13.5, color: "var(--muted)" }}>
-          Visual ERD with crow's foot notation — all 7 entities and their
-          relationships.
+          Visual ERD — all 7 entities and their relationships.
         </p>
       </div>
       <div

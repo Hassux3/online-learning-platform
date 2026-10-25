@@ -27,7 +27,14 @@ function Thumb({ slide, index, onOpen }) {
       }}
       title={`Jump to slide ${index + 1}`}
     >
-      <div style={{ width: SW, height: SH, transform: `scale(${THUMB_SCALE})`, transformOrigin: "top left" }}>
+      <div
+        style={{
+          width: SW,
+          height: SH,
+          transform: `scale(${THUMB_SCALE})`,
+          transformOrigin: "top left",
+        }}
+      >
         <SlideFrame slide={slide} index={index} total={SLIDES.length} />
       </div>
       <span
@@ -78,18 +85,32 @@ export default function SlidesPage() {
     <div style={{ padding: "28px 32px", maxWidth: 1200 }}>
       <style>{SLIDE_CSS}</style>
 
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 20, marginBottom: 22, flexWrap: "wrap" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 20,
+          marginBottom: 22,
+          flexWrap: "wrap",
+        }}
+      >
         <div>
           <div style={{ marginBottom: 10 }}>
             <span className="p p-g" style={{ fontSize: 12 }}>
-              ● {SLIDES.length} Slides Ready
+              ● {SLIDES.length} Slides we have prepared for you
             </span>
           </div>
-          <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-.5px", marginBottom: 7 }}>Presentation Slides</h1>
-          <p style={{ fontSize: 13.5, color: "var(--muted)", maxWidth: 560, lineHeight: 1.7 }}>
-            UML diagrams, architecture &amp; tech-stack walkthrough for the SE mini-project —
-            ready to present fullscreen or export as a PDF.
-          </p>
+          <h1
+            style={{
+              fontSize: 26,
+              fontWeight: 800,
+              letterSpacing: "-.5px",
+              marginBottom: 7,
+            }}
+          >
+            Presentation Slides
+          </h1>
         </div>
         <div style={{ display: "flex", gap: 10, flexShrink: 0 }}>
           <button
@@ -110,7 +131,9 @@ export default function SlidesPage() {
               opacity: exporting ? 0.7 : 1,
             }}
           >
-            {exporting ? `Exporting ${exporting.done}/${exporting.total}…` : "⬇ Download PDF"}
+            {exporting
+              ? `Exporting ${exporting.done}/${exporting.total}…`
+              : "⬇ Download PDF"}
           </button>
           <button
             onClick={() => openAt(0)}
@@ -159,18 +182,19 @@ export default function SlidesPage() {
                 width: THUMB_W,
               }}
             >
-              {i + 1}. {slide.nav || slide.title?.replace(/<[^>]+>/g, "") || slide.id}
+              {i + 1}.{" "}
+              {slide.nav || slide.title?.replace(/<[^>]+>/g, "") || slide.id}
             </div>
           </div>
         ))}
       </div>
 
-      <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 16 }}>
-        Tip: once presenting, use <b>→</b> / <b>←</b> (or Space) to move between slides, and{" "}
-        <b>Esc</b> to exit fullscreen.
-      </p>
-
-      {presenting && <Presentation startIndex={startAt} onExit={() => setPresenting(false)} />}
+      {presenting && (
+        <Presentation
+          startIndex={startAt}
+          onExit={() => setPresenting(false)}
+        />
+      )}
     </div>
   );
 }
