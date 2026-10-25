@@ -3,6 +3,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import SlideFrame, { SW, SH } from "./SlideFrame";
 import { SLIDES } from "./slidesData";
 import useFitScale from "./useFitScale";
+import useOrientation from "./useOrientation";
+import RotatePrompt from "./RotatePrompt";
 
 const N = SLIDES.length;
 
@@ -10,6 +12,8 @@ const N = SLIDES.length;
 // PRESENTATION — fullscreen player
 // ArrowRight / ArrowLeft / Space step through slides, Escape exits (and drops
 // out of the Fullscreen API if it's active). Mirrors the feel of hitting F11.
+// On small portrait screens, a RotatePrompt blocks the deck until the device
+// (or window) is turned landscape — a 16:9 canvas is unreadable otherwise.
 // ══════════════════════════════════════════════════════════════════════════════
 export default function Presentation({ startIndex = 0, onExit }) {
   const [i, setI] = useState(startIndex);
@@ -17,6 +21,8 @@ export default function Presentation({ startIndex = 0, onExit }) {
   const [showChrome, setShowChrome] = useState(true);
   const rootRef = useRef(null);
   const { scale, w, h, left, top } = useFitScale();
+  const { isPortrait, isSmall, isTouch } = useOrientation();
+  const needsRotate = isPortrait && isSmall;
   const hideTimer = useRef(null);
 
   const go = useCallback(
@@ -94,6 +100,33 @@ export default function Presentation({ startIndex = 0, onExit }) {
         overflow: "hidden",
       }}
     >
+      {needsRotate && (
+        <>
+          <RotatePrompt touch={isTouch} />
+          <button
+            onClick={exit}
+            aria-label="Exit presentation"
+            style={{
+              position: "absolute",
+              top: 18,
+              right: 18,
+              zIndex: 1101,
+              width: 36,
+              height: 36,
+              borderRadius: "50%",
+              background: "rgba(255,255,255,.06)",
+              border: "1px solid rgba(255,255,255,.14)",
+              color: "#c7cedb",
+              fontSize: 16,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            ✕
+          </button>
+        </>
+      )}
       <div
         style={{
           position: "absolute",

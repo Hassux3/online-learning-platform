@@ -1,21 +1,48 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SlideFrame, { SW, SH } from "./SlideFrame";
 import { SLIDES } from "./slidesData";
 import { SLIDE_CSS } from "./theme";
 import Presentation from "./Presentation";
 import { exportSlidesToPdf } from "./pdfExport";
 
-const THUMB_W = 272;
-const THUMB_SCALE = THUMB_W / SW;
-const THUMB_H = SH * THUMB_SCALE;
+// Thumbnail width steps down at a few breakpoints instead of a fixed 272px,
+// so the grid stays usable from a 360px phone up to a wide desktop without
+// per-thumbnail resize observers.
+function useThumbWidth() {
+  const pick = () => {
+    const vw = window.innerWidth;
+    if (vw < 420) return 132;
+    if (vw < 640) return 160;
+    if (vw < 900) return 200;
+    return 272;
+  };
+  const [w, setW] = useState(pick);
+  useEffect(() => {
+    const onResize = () => setW(pick());
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+  return w;
+}
 
-function Thumb({ slide, index, onOpen }) {
+function useIsNarrow(breakpoint = 560) {
+  const [narrow, setNarrow] = useState(() => window.innerWidth < breakpoint);
+  useEffect(() => {
+    const onResize = () => setNarrow(window.innerWidth < breakpoint);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [breakpoint]);
+  return narrow;
+}
+
+function Thumb({ slide, index, onOpen, thumbW, thumbH }) {
+  const scale = thumbW / SW;
   return (
     <button
       onClick={() => onOpen(index)}
       style={{
-        width: THUMB_W,
-        height: THUMB_H,
+        width: thumbW,
+        height: thumbH,
         border: "1px solid var(--sline, rgba(255,255,255,.09))",
         borderRadius: 10,
         overflow: "hidden",
@@ -31,7 +58,7 @@ function Thumb({ slide, index, onOpen }) {
         style={{
           width: SW,
           height: SH,
-          transform: `scale(${THUMB_SCALE})`,
+          transform: `scale(${scale})`,
           transformOrigin: "top left",
         }}
       >
@@ -61,6 +88,9 @@ export default function SlidesPage() {
   const [presenting, setPresenting] = useState(false);
   const [startAt, setStartAt] = useState(0);
   const [exporting, setExporting] = useState(null);
+  const thumbW = useThumbWidth();
+  const thumbH = SH * (thumbW / SW);
+  const narrow = useIsNarrow();
 
   const openAt = (i) => {
     // Must be requested synchronously inside the click handler — browsers
@@ -82,17 +112,17 @@ export default function SlidesPage() {
   };
 
   return (
-    <div style={{ padding: "28px 32px", maxWidth: 1200 }}>
+    <div style={{ padding: narrow ? "18px 16px" : "28px 32px", maxWidth: 1200 }}>
       <style>{SLIDE_CSS}</style>
 
       <div
         style={{
           display: "flex",
-          alignItems: "flex-start",
+          flexDirection: narrow ? "column" : "row",
+          alignItems: narrow ? "stretch" : "flex-start",
           justifyContent: "space-between",
-          gap: 20,
-          marginBottom: 22,
-          flexWrap: "wrap",
+          gap: 16,
+          marginBottom: 20,
         }}
       >
         <div>
@@ -103,7 +133,7 @@ export default function SlidesPage() {
           </div>
           <h1
             style={{
-              fontSize: 26,
+              fontSize: narrow ? 21 : 26,
               fontWeight: 800,
               letterSpacing: "-.5px",
               marginBottom: 7,
@@ -112,13 +142,14 @@ export default function SlidesPage() {
             Presentation Slides
           </h1>
         </div>
-        <div style={{ display: "flex", gap: 10, flexShrink: 0 }}>
+        <div style={{ display: "flex", gap: 10, flexShrink: 0, flexDirection: narrow ? "column" : "row" }}>
           <button
             onClick={download}
             disabled={!!exporting}
             style={{
               display: "flex",
               alignItems: "center",
+              justifyContent: "center",
               gap: 8,
               background: "var(--surface)",
               border: "1px solid var(--border)",
@@ -131,15 +162,14 @@ export default function SlidesPage() {
               opacity: exporting ? 0.7 : 1,
             }}
           >
-            {exporting
-              ? `Exporting ${exporting.done}/${exporting.total}…`
-              : "⬇ Download PDF"}
+            {exporting ? `Exporting ${exporting.done}/${exporting.total}…` : "⬇ Download PDF"}
           </button>
           <button
             onClick={() => openAt(0)}
             style={{
               display: "flex",
               alignItems: "center",
+              justifyContent: "center",
               gap: 8,
               background: "var(--green)",
               border: "none",
@@ -159,42 +189,47 @@ export default function SlidesPage() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: `repeat(auto-fill, ${THUMB_W}px)`,
-          gap: 16,
+          gridTemplateColumns: `repeat(auto-fill, ${thumbW}px)`,
+          gap: narrow ? 10 : 16,
+          justifyContent: narrow ? "center" : "start",
           background: "var(--s2)",
           border: "1px solid var(--border)",
           borderRadius: 14,
-          padding: 20,
+          padding: narrow ? 12 : 20,
         }}
       >
         {SLIDES.map((slide, i) => (
           <div key={slide.id}>
-            <Thumb slide={slide} index={i} onOpen={openAt} />
+            <Thumb slide={slide} index={i} onOpen={openAt} thumbW={thumbW} thumbH={thumbH} />
             <div
               style={{
-                fontSize: 11.5,
+                fontSize: 11,
                 color: "var(--muted)",
                 marginTop: 6,
                 fontWeight: 600,
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
-                width: THUMB_W,
+                width: thumbW,
               }}
             >
-              {i + 1}.{" "}
-              {slide.nav || slide.title?.replace(/<[^>]+>/g, "") || slide.id}
+              {i + 1}. {slide.nav || slide.title?.replace(/<[^>]+>/g, "") || slide.id}
             </div>
           </div>
         ))}
       </div>
 
-      {presenting && (
-        <Presentation
-          startIndex={startAt}
-          onExit={() => setPresenting(false)}
-        />
-      )}
+      <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 16 }}>
+        {narrow
+          ? "On a phone, the presentation opens in landscape — rotate when prompted."
+          : (
+            <>
+              Tip: once presenting, use <b>→</b> / <b>←</b> (or Space) to move between slides, and <b>Esc</b> to exit fullscreen.
+            </>
+          )}
+      </p>
+
+      {presenting && <Presentation startIndex={startAt} onExit={() => setPresenting(false)} />}
     </div>
   );
 }

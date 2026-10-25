@@ -422,6 +422,17 @@ button{cursor:pointer;border:none;background:none}
 .sb-tog{color:rgba(255,255,255,.3);width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:5px;flex-shrink:0;transition:all .15s}
 .sb-tog:hover{color:rgba(255,255,255,.7);background:rgba(255,255,255,.07)}
 .sb-nav{flex:1;padding:10px 8px;overflow-y:auto;display:flex;flex-direction:column;gap:1px}
+.mob-ham{display:none}
+.sb-backdrop{display:none}
+@media (max-width:760px){
+  .sb{width:252px;transform:translateX(-100%);transition:transform .28s ease;box-shadow:0 0 44px rgba(0,0,0,.4)}
+  .sb.coll{width:252px;transform:translateX(-100%)}
+  .sb:not(.coll){transform:translateX(0)}
+  .main,.main.coll{margin-left:0!important}
+  .mob-ham{display:flex;position:fixed;top:14px;left:14px;z-index:150;width:40px;height:40px;border-radius:10px;background:var(--ink);color:#fff;align-items:center;justify-content:center;box-shadow:var(--shm);border:none}
+  .sb-backdrop{display:block;position:fixed;inset:0;background:rgba(15,13,10,.5);z-index:199;opacity:0;pointer-events:none;transition:opacity .28s}
+  .sb-backdrop.show{opacity:1;pointer-events:auto}
+}
 .sb-sec{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.2);padding:10px 8px 4px;white-space:nowrap}
 .sb-div{height:1px;background:rgba(255,255,255,.06);margin:6px 4px}
 .sbi{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;font-size:13px;font-weight:500;color:rgba(255,255,255,.45);width:100%;text-align:left;transition:all .15s;white-space:nowrap}
@@ -872,6 +883,19 @@ function Sidebar({ page, setPage, open, setOpen, data, goCrud, crudTable }) {
   ];
   const cnt = (k) =>
     data ? (data[k === "student_profiles" ? "profiles" : k] || []).length : 0;
+  // On mobile the sidebar is an overlay drawer — close it after navigating
+  // so picking a page doesn't leave the backdrop covering the new content.
+  const closeOnMobile = () => {
+    if (window.innerWidth <= 760) setOpen(false);
+  };
+  const navTo = (k) => {
+    setPage(k);
+    closeOnMobile();
+  };
+  const navCrud = (k) => {
+    goCrud(k);
+    closeOnMobile();
+  };
   return (
     <aside className={`sb${open ? "" : " coll"}`}>
       <div className="sb-logo">
@@ -922,7 +946,7 @@ function Sidebar({ page, setPage, open, setOpen, data, goCrud, crudTable }) {
           <button
             key={n.k}
             className={`sbi${page === n.k ? " act" : ""}`}
-            onClick={() => setPage(n.k)}
+            onClick={() => navTo(n.k)}
             title={!open ? n.l : undefined}
           >
             <n.I />
@@ -940,7 +964,7 @@ function Sidebar({ page, setPage, open, setOpen, data, goCrud, crudTable }) {
           <button
             key={t.k}
             className={`sbi${page === "crud" && crudTable === t.k ? " act" : ""}`}
-            onClick={() => goCrud(t.k)}
+            onClick={() => navCrud(t.k)}
             title={!open ? TCONF[t.k].label : undefined}
           >
             <span className="sb-dot" style={{ background: t.dot }} />
@@ -3694,7 +3718,17 @@ export default function App() {
   const [data, setData] = useState(null);
   const [appReady, setAppReady] = useState(false);
   const [showInit, setShowInit] = useState(false);
-  const [sbOpen, setSbOpen] = useState(true);
+  const [sbOpen, setSbOpen] = useState(() => window.innerWidth > 760);
+
+  // Lock background scroll while the sidebar drawer covers the screen on mobile.
+  useEffect(() => {
+    if (window.innerWidth <= 760) {
+      document.body.style.overflow = sbOpen ? "hidden" : "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [sbOpen]);
 
   const loadData = useCallback(async () => {
     const [
@@ -3762,6 +3796,18 @@ export default function App() {
     <>
       <style>{G}</style>
       {showInit && <InitPopup onInit={handleInitDone} />}
+      <button
+        className="mob-ham"
+        onClick={() => setSbOpen(true)}
+        aria-label="Open menu"
+        style={{ display: sbOpen ? "none" : undefined }}
+      >
+        <Ic.Menu />
+      </button>
+      <div
+        className={`sb-backdrop${sbOpen ? " show" : ""}`}
+        onClick={() => setSbOpen(false)}
+      />
       <div className="app">
         <Sidebar
           page={page}
