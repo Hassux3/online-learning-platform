@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import SlidesPage from "./slides/SlidesPage";
 
 // ══════════════════════════════════════════════════════════════════════════════
 // DATABASE LAYER
@@ -662,6 +663,21 @@ const Ic = {
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
     </svg>
   ),
+  Slides: () => (
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <rect x="2" y="4" width="20" height="13" rx="2" />
+      <polygon points="10,8 16,10.5 10,13" fill="currentColor" stroke="none" />
+      <line x1="8" y1="21" x2="16" y2="21" />
+      <line x1="12" y1="17" x2="12" y2="21" />
+    </svg>
+  ),
 };
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -901,6 +917,7 @@ function Sidebar({ page, setPage, open, setOpen, data, goCrud, crudTable }) {
           { k: "tables", l: "Browse Tables", I: Ic.Grid },
           { k: "schema", l: "Schema & Relationships", I: Ic.Schema },
           { k: "erd", l: "ERD", I: Ic.Db },
+          { k: "slides", l: "Slides", I: Ic.Slides },
         ].map((n) => (
           <button
             key={n.k}
@@ -3788,6 +3805,7 @@ export default function App() {
               )}
               {page === "schema" && <SchemaPage />}
               {page === "erd" && <ErdPage />}
+              {page === "slides" && <SlidesPage />}
             </>
           )}
         </div>
