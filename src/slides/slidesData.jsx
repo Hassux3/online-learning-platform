@@ -79,7 +79,7 @@ function TitleSlide() {
   );
 }
 
-function SectionSlide({ n, label, title, sub }) {
+function SectionSlide({ n, label, title, sub, link }) {
   return function Body() {
     return (
       <div
@@ -122,6 +122,40 @@ function SectionSlide({ n, label, title, sub }) {
           >
             {sub}
           </p>
+        )}
+        {link && (
+          <a
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 10,
+              marginTop: 28,
+              alignSelf: "flex-start",
+              background: "rgba(110,231,183,.1)",
+              border: "1px solid rgba(110,231,183,.35)",
+              borderRadius: 100,
+              padding: "11px 20px",
+              fontFamily: "'JetBrains Mono',monospace",
+              fontSize: 14,
+              fontWeight: 700,
+              color: "var(--saccent)",
+              textDecoration: "none",
+            }}
+          >
+            <span
+              style={{
+                width: 7,
+                height: 7,
+                borderRadius: "50%",
+                background: "var(--saccent)",
+                boxShadow: "0 0 10px var(--saccent)",
+              }}
+            />
+            Live Preview — {link.replace(/^https?:\/\//, "")}
+          </a>
         )}
       </div>
     );
@@ -764,6 +798,7 @@ export const SLIDES = [
       label: "LIVE",
       title: "Demo Time",
       sub: "Dashboard → Browse Tables → Add / Edit / Delete a record → Schema → ERD → this Slides feature, fullscreen.",
+      link: "https://learn--platform.vercel.app/",
     }),
     nav: "§ Live Demo",
   },
