@@ -977,9 +977,7 @@ function Sidebar({ page, setPage, open, setOpen, data, goCrud, crudTable }) {
           </button>
         ))}
       </nav>
-      {open && (
-        <div className="sb-foot">Build with ☕ & {"</>"} by Hassan ;3</div>
-      )}
+      {open && <div className="sb-foot">Build with ☕ & {"</>"} by Hassan</div>}
     </aside>
   );
 }

@@ -649,7 +649,7 @@ export const SLIDES = [
     title: "What you can actually do in LearnPlatform",
     nav: "Features",
     Body: () => (
-      <div className="chip-row">
+      <div className="chip-column">
         <TechChip
           icon="📊"
           name="Overview Dashboard"
@@ -682,7 +682,7 @@ export const SLIDES = [
         />
         <TechChip
           icon="🎞️"
-          name="Slides (new)"
+          name="Slides"
           why="This presentation, fullscreen, keyboard-driven, exportable to PDF."
           color="#34d6a8"
         />
@@ -732,7 +732,7 @@ export const SLIDES = [
     title: "What we used, and why",
     nav: "Tech Stack",
     Body: () => (
-      <div className="chip-row">
+      <div className="chip-column">
         <TechChip
           icon="⚛️"
           name="React 19"
@@ -774,23 +774,6 @@ export const SLIDES = [
   },
 
   {
-    id: "decisions",
-    kicker: "Engineering Decisions",
-    title: "Patterns that kept one big file sane",
-    nav: "Decisions",
-    Body: () => (
-      <Bullets
-        items={[
-          "<b>Config-driven CRUD</b> — a single <code>TCONF</code> object describes every table's fields, types and foreign keys; one <code>CrudPage</code> component renders all 7 tables.",
-          "<b>Centralized cell formatting</b> — a single <code>Cell()</code> renderer decides how a price, status, FK, or date column is displayed everywhere it appears.",
-          "<b>Idempotent seeding</b> — <code>seedDB()</code> checks the instructor count before inserting demo data, so reloads never duplicate records.",
-          "<b>HMR-safe singletons</b> — the DB promise and the seed promise are both cached on <code>window</code>, not module scope, surviving hot reloads during development.",
-        ]}
-      />
-    ),
-  },
-
-  {
     id: "s-demo",
     bare: true,
     Body: SectionSlide({
@@ -803,21 +786,5 @@ export const SLIDES = [
     nav: "§ Live Demo",
   },
 
-  {
-    id: "future",
-    kicker: "Future Work",
-    title: "Where we'd take it next",
-    nav: "Future Work",
-    Body: () => (
-      <Bullets
-        items={[
-          "<b>Auth &amp; roles</b> — separate Student / Instructor permissions instead of one open interface.",
-          "<b>A real backend</b> — swap the IndexedDB layer for an API so data syncs across devices.",
-          "<b>Analytics</b> — enrollment trends and revenue charts on the Overview dashboard.",
-          "<b>Import / export</b> — backup and restore the whole database as JSON.",
-        ]}
-      />
-    ),
-  },
   { id: "thanks", bare: true, Body: ThankYouSlide, nav: "Thank You" },
 ];
